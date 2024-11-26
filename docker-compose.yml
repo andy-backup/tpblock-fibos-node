@@ -1,0 +1,31 @@
+version: '1.0'
+services:
+  node-consensus:
+    image: fibos-node:v5.0.1.0
+    container_name: node-consensus
+    volumes:
+      - ../node_data/node_0:/node
+      - ./resources:/app/resources
+    ports:
+      - "8870:8870"
+      - "9870:9870"
+    env_file:
+      - ./resources/env.list
+    environment:
+      - VIRTUAL_HOST=api.fibos.io,to-rpc.fibos.io
+      - VIRTUAL_PORT=8870
+
+  node-sync:
+    image: fibos-node:v5.0.1.0
+    container_name: node-sync
+    volumes:
+      - ../node_data/data_sync:/node/data
+      - ./resources:/app/resources
+    ports:
+      - "8870:8870"
+      - "9870:9870"
+    env_file:
+      - ./resources/sync.list
+    environment:
+      - VIRTUAL_HOST=api.fibos.io,to-rpc.fibos.io
+      - VIRTUAL_PORT=8870
