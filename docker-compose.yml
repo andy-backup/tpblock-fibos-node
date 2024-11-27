@@ -11,21 +11,22 @@ services:
       - "9870:9870"
     env_file:
       - ./resources/env.list
-    environment:
-      - VIRTUAL_HOST=api.fibos.io,to-rpc.fibos.io
-      - VIRTUAL_PORT=8870
+    entrypoint: ["sh", "/app/entrypoint.sh"] 
+    command: ["node"]
 
   node-sync:
     image: fibos-node:v5.0.1.0
-    container_name: node-sync
+    container_name: fibos-node
     volumes:
-      - ../node_data/data_sync:/node/data
+      - /mnt/data/new_node/data:/node/data
       - ./resources:/app/resources
     ports:
       - "8870:8870"
       - "9870:9870"
     env_file:
       - ./resources/sync.list
-    environment:
-      - VIRTUAL_HOST=api.fibos.io,to-rpc.fibos.io
-      - VIRTUAL_PORT=8870
+    # environment:
+    #   - VIRTUAL_HOST=api.fibos.io,to-rpc.fibos.io
+    #   - VIRTUAL_PORT=8870
+    entrypoint: ["sh", "/app/entrypoint.sh"] 
+    command: ["node"]
