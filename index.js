@@ -54,6 +54,7 @@ let producer_config = {
 
 if (producername && public_key && private_key) {
 	producer_config['producer-name'] = producername;
+	producer_config['enable-stale-production'] = true;
 	producer_config['signature-provider'] = `${public_key}=KEY:${private_key}`;
 }
 
