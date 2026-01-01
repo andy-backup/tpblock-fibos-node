@@ -14,4 +14,4 @@ RUN apt-get update && \
 COPY . /app
 RUN  sudo sh /app/installer.sh
 ENTRYPOINT ["./entrypoint.sh"]
-CMD ["chain"]
+CMD ["node"]

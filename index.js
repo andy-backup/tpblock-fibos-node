@@ -1,5 +1,7 @@
 const fibos = require('chain');
 console.notice("start FIBOS producer node");
+const snapshot = require('./snapshot');
+
 const env_list = process.env;
 let p2paddress = env_list.P2P_PEER_ADDRESS ? env_list.P2P_PEER_ADDRESS.split(',') : [];
 
@@ -42,6 +44,7 @@ fibos.load("http", {
 
 fibos.load("net", {
 	"max-clients": 100,
+	"p2p-max-nodes-per-host": 15,
 	"p2p-peer-address": p2paddress,
 	"p2p-listen-endpoint": `0.0.0.0:${p2pPort}`,
 	"agent-name": "FIBOS Bp"
@@ -52,10 +55,14 @@ let producer_config = {
 	'snapshots-dir': 'snapshots'
 }
 
+let cross_config = {}
+
 if (producername && public_key && private_key) {
 	producer_config['producer-name'] = producername;
-	producer_config['enable-stale-production'] = true;
+	producer_config['enable-stale-production'] = false;
 	producer_config['signature-provider'] = `${public_key}=KEY:${private_key}`;
+	cross_config['signature-producer'] = producername;
+	cross_config['signature-private-key'] = private_key;
 }
 
 if(producer_config){
@@ -63,9 +70,18 @@ if(producer_config){
 	fibos.load("producer_api");
 }
 
+snapshot(chain_config);
 fibos.load("chain", chain_config);
 fibos.load("chain_api");
 
-fibos.load("cross");
+if(env_list.USE_WALLET === 'true'){
+	fibos.load("wallet");
+	fibos.load("wallet_api");
+}
+
+fibos.load("cross", cross_config);
+fibos.on("close", (code) => {
+    process.exit(code);
+});
 
 fibos.start();

@@ -3,7 +3,7 @@
 ## docker 构建
 
 ```bash
-docker build -t fibos-node:v5.0.1.0 .
+docker build -t fibos-node:v5.0.3.0 .
 ```
 
 ## docker 运行
